@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+    <Properties>
+        <property name="logLocation">log/</property>
+    </Properties>
+    <Appenders>
+        <RollingFile name="FILE" append="true" fileName="${env:logLocation:-logLocation}/scrapping.log"
+                     filePattern="${env:logLocation:-logLocation}/$${date:yyyy-MM}/scrapping/scrapping-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="[SCRAPPING] - %d{ISO8601} %-5p %c:%L - %m%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="5MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!-- <LogStashJSONLayout/> -->
+            <PatternLayout pattern="[SCRAPPING] - %d{ISO8601} %-5p %c:%L - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="DEBUG">
+            <!-- <AppenderRef ref="vertx_socket" /> -->
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="FILE"/>
+        </Root>
+    </Loggers>
+</Configuration>
