@@ -16,3 +16,6 @@ gradle-app.setting
 .idea/
 log/
 *.log
+
+# # OSX Files
+.DS_Store
