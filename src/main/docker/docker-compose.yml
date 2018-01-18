@@ -1,0 +1,51 @@
+version: '3'
+services:
+#  web:
+#    build: .
+#    container_name: 'data-beetle-main-container'
+#    ports:
+#     - 7090:7090
+#    links:
+#      - 'data-beetle-rabbitmq-container'
+#      - 'data-beetle-elasticsearch-container'
+#      - 'data-beetle-postgis-container'
+#    volumes:
+#      - ../../volumes/main:/opt
+  rabbitmq: # This broker can change, due the nature of the process we're trying to implement
+    image: "rabbitmq:3-management"
+    container_name: 'data-beetle-rabbitmq-container'
+    volumes:
+      - ../../../volumes/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=n0m3l0s3
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:6.1.2"
+    container_name: 'data-beetle-elasticsearch-container'
+    ports:
+      - 9200:9200
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+    volumes:
+      - ../../../volumes/elasticsearch:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  postgis:
+      image: "mdillon/postgis"
+      container_name: 'data-beetle-postgis-container'
+      ports:
+        - 5432:5432
+      environment:
+        - POSTGRES_PASSWORD=n0m3l0s3
+        - POSTGRES_USER=root
+      volumes:
+        - ../../../volumes/postgis:/var/lib/postgresql/data
