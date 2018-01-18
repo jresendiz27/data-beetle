@@ -6,18 +6,22 @@ services:
 #    ports:
 #     - 7090:7090
 #    links:
-#      - 'data-beetle-redis-container'
+#      - 'data-beetle-rabbitmq-container'
 #      - 'data-beetle-elasticsearch-container'
 #      - 'data-beetle-postgis-container'
 #    volumes:
 #      - ../../volumes/main:/opt
-  redis:
-    image: "redis:alpine"
-    container_name: 'data-beetle-redis-container'
+  rabbitmq: # This broker can change, due the nature of the process we're trying to implement
+    image: "rabbitmq:3-management"
+    container_name: 'data-beetle-rabbitmq-container'
     volumes:
-      - ../../../volumes/redis:/data
+      - ../../../volumes/rabbitmq:/var/lib/rabbitmq
     ports:
-      - 6379:6379
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=n0m3l0s3
   elasticsearch:
     image: "docker.elastic.co/elasticsearch/elasticsearch:6.1.2"
     container_name: 'data-beetle-elasticsearch-container'
