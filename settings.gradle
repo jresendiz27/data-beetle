@@ -16,3 +16,6 @@ include 'services:webservice'
 */
 
 rootProject.name = 'data-beetle'
+include 'core'
+include 'scrapping'
+
