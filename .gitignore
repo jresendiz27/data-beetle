@@ -19,3 +19,6 @@ volumes/
 
 log/
 *.log
+
+# # OSX Files
+.DS_Store

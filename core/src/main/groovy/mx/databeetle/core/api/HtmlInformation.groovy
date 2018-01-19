@@ -6,4 +6,5 @@ import groovy.transform.CompileStatic
 interface HtmlInformation extends DocumentInformation {
     Map<String, String> getMetaTagsInformation()
     void removeUnusedDOMElements()
+    ArrayList<String> getDocumentLinks()
 }
