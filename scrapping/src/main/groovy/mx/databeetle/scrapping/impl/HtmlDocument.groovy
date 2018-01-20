@@ -17,17 +17,25 @@ class HtmlDocument implements HtmlInformation {
 
     Document document
     String content
+    String newsSelector
+    String relatedArticlesSelector
 
     HtmlDocument(String content) {
         this.content = content
         this.document = new Cleaner(Whitelist.basic()).clean(Jsoup.parse(this.content))
     }
 
+    HtmlDocument(String content, String newsSelector, String relatedArticlesSelector) {
+        this(content)
+        this.newsSelector = newsSelector;
+        this.relatedArticlesSelector = relatedArticlesSelector;
+    }
+
     @Override
     Map<String, Long> getWordsCount() {
         Map<String, Long> words = [:]
         // TODO use a selector considering the page information, based on interface?
-        String bodyText = StringSanitizer.sanitizeContent(document.body().text())
+        String bodyText = StringSanitizer.sanitizeContent(document.select(newsSelector).text())
         bodyText.split(" ").each { String word ->
             if (words.get(word) != null) {
                 Long wordQuantity = words.get(word) + 1
@@ -54,8 +62,9 @@ class HtmlDocument implements HtmlInformation {
     @Override
     ArrayList<String> getDocumentLinks() {
         ArrayList<String> links = []
-        document.select("a")*.attr("href")
-                .findAll { link -> link.startsWith("http") }
+        document.select("$relatedArticlesSelector a")*.attr("href")
+        // Not all the links related with la jornada starts with http
+//                .findAll { link -> link.startsWith("http") } //
                 .each { link -> links << link }
         links
     }
