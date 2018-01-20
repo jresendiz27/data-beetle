@@ -1,6 +1,7 @@
 package mx.databeetle.scrapping
 
 import groovy.util.logging.Log4j2
+import mx.databeetle.scrapping.impl.HtmlDocument
 import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -10,28 +11,29 @@ import java.lang.Void as Should
 @Stepwise
 @Log4j2
 class LaJornadaPageSpec extends Specification {
-  HtmlDocument document
+    HtmlDocument document
 
-  def setup() {
-    String htmlContent = this.getClass().getClassLoader().getResource('./pages/Jornada.html').text
-    document = new HtmlDocument(htmlContent)
-  }
+    def setup() {
+        String htmlContent = this.getClass().getClassLoader().getResource('./pages/Jornada.html').text
+        // div#other-articles selector for related articles section, loaded on runtime
+        document = new HtmlDocument(htmlContent, "div#article-cont", "")
+    }
 
-  @Ignore
-  Should "Read get the HTML file and extract the word count"() {
+    @Ignore
+    Should "Read get the HTML file and extract the word count"() {
 
-  }
+    }
 
-  Should "Get the links from the HTML"(){
-    given:
-      document.removeUnusedDOMElements()
-    when:
-      ArrayList<String> links = document.getDocumentLinks()
-    then:
-      links.size() == 85
-  }
+    Should "Get the links from the HTML"() {
+        given:
+        document.removeUnusedDOMElements()
+        when:
+        ArrayList<String> links = document.getDocumentLinks()
+        then:
+        links.size() > 0
+    }
 
-  def cleanup() {
+    def cleanup() {
 
-  }
+    }
 }

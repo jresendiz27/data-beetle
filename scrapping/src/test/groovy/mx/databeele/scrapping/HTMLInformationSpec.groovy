@@ -1,6 +1,7 @@
 package mx.databeetle.scrapping
 
 import groovy.util.logging.Log4j2
+import mx.databeetle.scrapping.impl.HtmlDocument
 import spock.lang.Specification
 import spock.lang.Stepwise
 
@@ -12,7 +13,7 @@ class HTMLInformationSpec extends Specification {
 
   def setup() {
     String html = this.getClass().getClassLoader().getResource('./pages/BasicPage.html').text
-    document = new HtmlDocument(html)  
+    document = new HtmlDocument(html, "body", "body")
   }
 
   void "Extract the word count from the page"() {
