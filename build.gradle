@@ -12,6 +12,7 @@ allprojects {
         groovyVersion = "2.4.8"
         sourceCompatibility = '1.8'
         targetCompatibility = 1.8
+        vertxVersion = '3.5.0'
     }
 
     repositories {
@@ -22,8 +23,15 @@ allprojects {
         compile "org.codehaus.groovy:groovy-all:$groovyVersion"
         compile 'org.apache.logging.log4j:log4j-core:2.8.2'
         compile 'org.apache.logging.log4j:log4j-api:2.8.2'
-
+        // Vertx
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-lang-groovy:$vertxVersion"
+        compile "io.vertx:vertx-config:$vertxVersion"
+        compile "io.vertx:vertx-rabbitmq-client:$vertxVersion"
+        // REST
+        compile 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
         testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+        testCompile "io.vertx:vertx-unit:$vertxVersion"
         testCompile 'junit:junit:4.12'
     }
 }
