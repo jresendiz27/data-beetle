@@ -1,4 +1,4 @@
-package mx.databeetle.core.sanitizer
+package mx.databeetle.scrapping.sanitizer
 
 import groovy.transform.CompileStatic
 

@@ -1,4 +1,4 @@
-package mx.databeetle.scrapping.services
+package mx.databeetle.core.services
 
 import groovy.util.logging.Log4j2
 import groovyx.net.http.ContentTypes

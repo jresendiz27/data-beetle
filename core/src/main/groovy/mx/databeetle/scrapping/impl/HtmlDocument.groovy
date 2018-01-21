@@ -2,8 +2,8 @@ package mx.databeetle.scrapping.impl
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
-import mx.databeetle.core.api.HtmlInformation
-import mx.databeetle.core.sanitizer.StringSanitizer
+import mx.databeetle.interfaces.HtmlExtractor
+import mx.databeetle.scrapping.sanitizer.StringSanitizer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -11,18 +11,22 @@ import org.jsoup.safety.Cleaner
 import org.jsoup.safety.Whitelist
 import org.jsoup.select.Elements
 
+
 @Log4j2
 @CompileStatic
-class HtmlDocument implements HtmlInformation {
+class HtmlDocument implements HtmlExtractor {
 
     Document document
+    ArrayList<Element> metaTags
     String content
     String newsSelector
     String relatedArticlesSelector
 
     HtmlDocument(String content) {
         this.content = content
-        this.document = new Cleaner(Whitelist.basic()).clean(Jsoup.parse(this.content))
+        this.document = Jsoup.parse(this.content)
+        this.metaTags = document.select("meta")
+        this.document = new Cleaner(Whitelist.basic()).clean(this.document)
     }
 
     HtmlDocument(String content, String newsSelector, String relatedArticlesSelector) {
@@ -49,7 +53,12 @@ class HtmlDocument implements HtmlInformation {
 
     @Override
     Map<String, String> getMetaTagsInformation() {
-        return null
+      Map<String, String> metaTags = [:]
+      //TODO: Externalize allowed meta tags
+      List<String> allowedMetaTags = ["keywords","robots","og:locale","og:url","og:title"]
+      this.metaTags.findAll{ tag -> (tag.attr("name") in allowedMetaTags || tag.attr("property") in allowedMetaTags) }
+                             .each{ tag -> metaTags[tag.attr("name")] = tag.attr("content") }
+      metaTags
     }
 
     @Override

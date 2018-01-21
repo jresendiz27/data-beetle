@@ -19,9 +19,11 @@ class LaJornadaPageSpec extends Specification {
         document = new HtmlDocument(htmlContent, "div#article-cont", "")
     }
 
-    @Ignore
-    Should "Read get the HTML file and extract the word count"() {
-
+    Should "Get SEO meta-tags as Map"() {
+      when: 
+        Map<String,String> meta = document.getMetaTagsInformation()
+      then:
+        meta["keywords"] == "noticias, México"
     }
 
     Should "Get the links from the HTML"() {

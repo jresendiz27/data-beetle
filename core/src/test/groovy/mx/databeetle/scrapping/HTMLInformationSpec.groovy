@@ -1,5 +1,4 @@
 package mx.databeetle.scrapping
-
 import groovy.util.logging.Log4j2
 import mx.databeetle.scrapping.impl.HtmlDocument
 import spock.lang.Specification
@@ -25,10 +24,5 @@ class HTMLInformationSpec extends Specification {
       !wordCount.isEmpty()
       wordCount.get("world") == (Long) 5
   }
-
-
-  void "Get SEO meta-tags as Map"() {
-    expect:
-      assert true // Implement me!
-  }
+  
 }
