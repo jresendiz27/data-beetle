@@ -9,8 +9,6 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
-
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
@@ -20,8 +18,6 @@ allprojects {
         sourceCompatibility = '1.8'
         targetCompatibility = 1.8
         springVersion = "4.3.13.RELEASE"
-        
-        
     }
 
   repositories {
@@ -29,7 +25,7 @@ allprojects {
   }
 
   dependencies {
-    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+      compile "org.codehaus.groovy:groovy-all:$groovyVersion"
       compile 'org.apache.logging.log4j:log4j-core:2.8.2'
       compile 'org.apache.logging.log4j:log4j-api:2.8.2'
       compile "org.springframework:spring-context:${springVersion}"
@@ -38,10 +34,6 @@ allprojects {
       // REST
       compile 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
       compile 'org.jsoup:jsoup:1.10.2'
-      
-      testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-      
-      testCompile 'junit:junit:4.12'
   }
 }
 
@@ -61,7 +53,7 @@ configure(rootProject){
     compile "io.vertx:vertx-lang-groovy:$vertxVersion"
     compile "io.vertx:vertx-config:$vertxVersion"
     compile "io.vertx:vertx-rabbitmq-client:$vertxVersion"
-    compile project(":scrapping")
+    compile project(":core")
     testCompile "io.vertx:vertx-unit:$vertxVersion"
   } 
 
@@ -97,15 +89,9 @@ project(":api"){
 }
 
 project(":core") {
-  dependencies {
-    compile project(":api")
-  }
+    dependencies {
+      compile project(":api")
+      testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+      testCompile 'junit:junit:4.12'
+    }
 }
-
-project(":scrapping") {
-  dependencies {
-    compile project(":core")
-  }
-}
-
-
