@@ -9,7 +9,6 @@ import mx.databeetle.scrapping.services.TwitterService
 class TwitterVerticle extends AbstractVerticle {
     TwitterService twitterService
 
-
     void start() {
         twitterService = new TwitterService()
         vertx.setPeriodic(120000, { handler ->
