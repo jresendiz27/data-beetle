@@ -3,7 +3,7 @@ package mx.databeetle.scrapping.verticles
 import groovy.util.logging.Log4j2
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.json.JsonObject
-import mx.databeetle.scrapping.services.TwitterService
+import mx.databeetle.core.services.TwitterService
 
 @Log4j2
 class TwitterVerticle extends AbstractVerticle {

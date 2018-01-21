@@ -1,4 +1,4 @@
-package mx.databeetle
+package mx.databeetle.scrapping
 import io.vertx.core.AbstractVerticle
 
 class Main extends AbstractVerticle {
