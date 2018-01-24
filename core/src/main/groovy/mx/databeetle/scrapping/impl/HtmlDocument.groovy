@@ -26,7 +26,7 @@ class HtmlDocument implements HtmlExtractor {
         this.content = content
         this.document = Jsoup.parse(this.content)
         this.metaTags = document.select("meta")
-        this.document = new Cleaner(Whitelist.basic()).clean(this.document)
+        this.document = new Cleaner(Whitelist.relaxed().addAttributes("div","class")).clean(this.document)
     }
 
     HtmlDocument(String content, String newsSelector, String relatedArticlesSelector) {
@@ -72,8 +72,6 @@ class HtmlDocument implements HtmlExtractor {
     ArrayList<String> getDocumentLinks() {
         ArrayList<String> links = []
         document.select("$relatedArticlesSelector a")*.attr("href")
-        // Not all the links related with la jornada starts with http
-//                .findAll { link -> link.startsWith("http") } //
                 .each { link -> links << link }
         links
     }
