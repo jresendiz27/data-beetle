@@ -26,15 +26,6 @@ class LaJornadaPageSpec extends Specification {
         meta["keywords"] == "noticias, México"
     }
 
-    Should "Get the links from the HTML"() {
-        given:
-        document.removeUnusedDOMElements()
-        when:
-        ArrayList<String> links = document.getDocumentLinks()
-        then:
-        links.size() > 0
-    }
-
     def cleanup() {
 
     }
