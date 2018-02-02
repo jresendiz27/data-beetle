@@ -1,7 +1,12 @@
 buildscript {
-    repositories {
-        mavenCentral()
-    }
+  repositories {
+    mavenCentral()
+  }
+}
+
+plugins {
+  id 'application'
+  id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 allprojects {
@@ -12,47 +17,81 @@ allprojects {
         groovyVersion = "2.4.8"
         sourceCompatibility = '1.8'
         targetCompatibility = 1.8
-        vertxVersion = '3.5.0'
+        springVersion = "4.3.13.RELEASE"
     }
 
-    repositories {
-        mavenCentral()
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+      compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+      compile 'org.apache.logging.log4j:log4j-core:2.8.2'
+      compile 'org.apache.logging.log4j:log4j-api:2.8.2'
+      compile "org.springframework:spring-context:${springVersion}"
+      compile 'org.jsoup:jsoup:1.10.2'
+      
+      // REST
+      compile 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
+      compile 'org.jsoup:jsoup:1.10.2'
+  }
+}
+
+configure(rootProject){
+  mainClassName = 'io.vertx.core.Launcher' 
+  def mainVerticleName = "mx.databeetle.scrapping.Main"
+
+  ext {
+    vertxVersion = '3.5.0'
+    doOnChange = './gradlew classes'
+    
+    watchForChange = 'src/**/*'
+  }
+
+  dependencies {
+    compile "io.vertx:vertx-core:$vertxVersion"
+    compile "io.vertx:vertx-lang-groovy:$vertxVersion"
+    compile "io.vertx:vertx-config:$vertxVersion"
+    compile "io.vertx:vertx-rabbitmq-client:$vertxVersion"
+    compile project(":core")
+    testCompile "io.vertx:vertx-unit:$vertxVersion"
+  } 
+
+  shadowJar {
+    classifier = 'fat'
+    manifest {
+      attributes "Main-Verticle": mainVerticleName
     }
 
-    dependencies {
-        compile "org.codehaus.groovy:groovy-all:$groovyVersion"
-        compile 'org.apache.logging.log4j:log4j-core:2.8.2'
-        compile 'org.apache.logging.log4j:log4j-api:2.8.2'
-        // Vertx
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-lang-groovy:$vertxVersion"
-        compile "io.vertx:vertx-config:$vertxVersion"
-        compile "io.vertx:vertx-rabbitmq-client:$vertxVersion"
-        // REST
-        compile 'io.github.http-builder-ng:http-builder-ng-core:1.0.3'
-        testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-        testCompile "io.vertx:vertx-unit:$vertxVersion"
-        testCompile 'junit:junit:4.12'
+    mergeServiceFiles {
+      include "META-INF/services/io.vertx.core.spi.VerticleFactory"
     }
+  }
+
+  run {
+    args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange"]
+  }
 }
 
 subprojects {
-    test {
-        testLogging {
-            showStandardStreams = true
-            events "passed", "skipped", "failed"
-        }
+  test {
+    testLogging {
+      showStandardStreams = true
+        events "passed", "skipped", "failed"
     }
+  }
+}
+
+project(":api"){
+  dependencies{
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
+  }
 }
 
 project(":core") {
     dependencies {
-    }
-}
-
-project(":scrapping") {
-    dependencies {
-        compile project(":core")
-        compile 'org.jsoup:jsoup:1.10.2'
+      compile project(":api")
+      testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+      testCompile 'junit:junit:4.12'
     }
 }
